@@ -1,16 +1,23 @@
--- This is a query to calculate 95th percentile statistics for bits in, bits out
+-- This is a query to calculate 95th percentile statistics for bits in, bits out,
 -- and a new column that is the max of bits in vs. bits out for each sample
--- only for business hours (ie excluding weekends and hours before / after work
--- hours
+-- only for business hours (i.e. excluding weekends and hours before / after work
+-- hours)
 -- 
+-- Edit the "WHERE" statement in the "InterfaceTraffic_Detail_BusinessHours" CTE
+--  to choose which devices you're querying
+--
 -- Developed/tested with
 --  Microsoft SQL server 2014
 --  Orion Platform 2017.1, NPM 12.1
-
+--  Uses the detailed last 30 days view of interface statistics 
+--      [swnpm].[dbo].[InterfaceTraffic_Detail]
+--      you may wish to use different input data
+--
 -- Issues
 --  You currently must adjust the timezone setting manually and be sure to query
 --      only devices that are all in the same timezone
 --  Surely performance can be improved
+
 
 -- To Do
 --  Document adding a custom column with a UTC offset for each device and modify
@@ -24,7 +31,7 @@ DECLARE @StartBusinessHours Float
 DECLARE @EndBusinessHours Float
 
 -- The UTC offset of the timezone the samples are stored in 
--- (ie where the database is)
+-- (i.e. where the database is)
 SET @SampleOffset = -4.0
 
 -- The UTC offset of the timezone where the target devices are
